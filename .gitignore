@@ -1,0 +1,24 @@
+# Local secrets and environment
+.env
+.env.*
+!.env.example
+.secrets/
+.local/
+
+# Python development and build output
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.lbpkg
+
+# Runtime data and editor metadata
+/runtime-data/
+/backups/
+.DS_Store
