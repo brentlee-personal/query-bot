@@ -78,9 +78,11 @@ def resolve_ticket_env(
 
     default_env = _nonempty(config.get("identity-ticket-env")) or "QUERY_BOT_PSR_USER_TICKET"
     map_file = _nonempty(config.get("identity-map-file"))
-    mapping = load_identity_map(map_file) if map_file else {}
 
-    if mapping:
+    if map_file:
+        # A configured map (including empty {}) fail-closes for unmapped actors.
+        # Do not fall through to the default probe env when the map is empty.
+        mapping = load_identity_map(map_file)
         ticket_env = mapping.get(actor)
         if not ticket_env:
             raise PSRAskIdentityError(

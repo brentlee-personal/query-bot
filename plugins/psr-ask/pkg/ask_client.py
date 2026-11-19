@@ -121,12 +121,17 @@ def parse_ask_response(http_status: int, body: bytes) -> AskSuccess | AskFailure
             code="psr.unsupported_protocol",
         )
 
+    request_id: str | None = None
+    raw_request_id = payload.get("request_id")
+    if isinstance(raw_request_id, str) and raw_request_id.strip():
+        request_id = raw_request_id.strip()
+
     if "answer" in payload:
         text = _format_knowledge(payload)
-        return AskSuccess(kind="knowledge", answer_text=text, raw=payload)
+        return AskSuccess(kind="knowledge", answer_text=text, raw=payload, request_id=request_id)
     if "result" in payload and isinstance(payload.get("result"), dict):
         text = _format_query_result(payload["result"])
-        return AskSuccess(kind="query", answer_text=text, raw=payload)
+        return AskSuccess(kind="query", answer_text=text, raw=payload, request_id=request_id)
     raise PSRAskTransportError(
         "success response missing answer or result",
         code="psr.invalid_response",

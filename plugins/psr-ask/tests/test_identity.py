@@ -49,6 +49,19 @@ def test_unmapped_actor_is_denied(tmp_path: Path) -> None:
     assert exc.value.code == "psr.identity_unmapped"
 
 
+def test_empty_configured_map_fails_closed(tmp_path: Path) -> None:
+    """Configured empty map must not fall back to the default probe ticket env."""
+    map_path = tmp_path / "map.json"
+    map_path.write_text("{}", encoding="utf-8")
+    with pytest.raises(PSRAskIdentityError) as exc:
+        resolve_ticket_env(
+            actor_id="ou_anyone",
+            config={"identity-map-file": str(map_path)},
+            environ={"QUERY_BOT_PSR_USER_TICKET": "must-not-be-used"},
+        )
+    assert exc.value.code == "psr.identity_unmapped"
+
+
 def test_missing_ticket_env_fails_closed() -> None:
     with pytest.raises(PSRAskIdentityError) as exc:
         resolve_ticket_env(

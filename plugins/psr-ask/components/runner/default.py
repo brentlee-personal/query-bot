@@ -99,10 +99,17 @@ class DefaultRunner(Runner):
             return
 
         # Present backend business content only; no model rewrite.
+        # Preserve backend request_id in host-visible metadata when present.
         prefix = "查询结果：\n" if result.kind == "query" else ""
         body = prefix + result.answer_text
-        yield RunnerResult.message_completed(
+        metadata: dict[str, typing.Any] = {}
+        if result.request_id:
+            metadata["psr_request_id"] = result.request_id
+        completed = RunnerResult.message_completed(
             ctx.run_id,
             Message(role="assistant", content=body),
         )
+        if metadata:
+            completed = completed.model_copy(update={"metadata": metadata})
+        yield completed
         yield RunnerResult.run_completed(ctx.run_id)

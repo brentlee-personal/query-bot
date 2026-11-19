@@ -1,6 +1,7 @@
 {
   "ok": true,
   "protocol_version": "tob-go-v1",
+  "request_id": "req-synthetic-query-001",
   "result": {
     "columns": ["metric", "value", "unit"],
     "rows": [["synthetic_sales", 42, "件"]],

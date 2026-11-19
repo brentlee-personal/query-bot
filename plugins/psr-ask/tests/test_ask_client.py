@@ -20,6 +20,7 @@ def test_parse_query_success() -> None:
     parsed = parse_ask_response(200, body)
     assert isinstance(parsed, AskSuccess)
     assert parsed.kind == "query"
+    assert parsed.request_id == "req-synthetic-query-001"
     assert "synthetic_sales" in parsed.answer_text
     assert "42" in parsed.answer_text
     assert "件" in parsed.answer_text
@@ -30,6 +31,7 @@ def test_parse_knowledge_success() -> None:
     parsed = parse_ask_response(200, body)
     assert isinstance(parsed, AskSuccess)
     assert parsed.kind == "knowledge"
+    assert parsed.request_id == "req-synthetic-knowledge-001"
     assert "合成知识答案" in parsed.answer_text
     assert "chunk-synthetic" in parsed.answer_text
 
@@ -82,4 +84,5 @@ async def test_post_ask_query_success_roundtrip() -> None:
             client=client,
         )
     assert result.kind == "query"
+    assert result.request_id == "req-synthetic-query-001"
     assert "42" in result.answer_text

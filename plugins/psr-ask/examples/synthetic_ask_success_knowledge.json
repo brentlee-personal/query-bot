@@ -1,6 +1,7 @@
 {
   "ok": true,
   "protocol_version": "tob-go-v1",
+  "request_id": "req-synthetic-knowledge-001",
   "answer": "这是合成知识答案，仅用于插件解析测试。",
   "citations": [
     {
