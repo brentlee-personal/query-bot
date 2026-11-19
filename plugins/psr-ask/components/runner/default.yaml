@@ -1,0 +1,63 @@
+apiVersion: langbot/v1
+kind: Runner
+metadata:
+  name: default
+  label:
+    en_US: PSR Ask
+    zh_Hans: PSR 查询
+  description:
+    en_US: Call PSR ToB POST /ask and return the backend business answer.
+    zh_Hans: 调用 PSR ToB POST /ask，返回后端业务答案。
+spec:
+  usages: [agent]
+  config:
+    - name: ask-base-url
+      label:
+        en_US: Ask base URL
+        zh_Hans: /ask 服务根地址
+      description:
+        en_US: Origin of the ToB service, without trailing /ask. May be overridden by QUERY_BOT_PSR_ASK_BASE_URL.
+        zh_Hans: ToB 服务根地址，不要带 /ask。可用环境变量 QUERY_BOT_PSR_ASK_BASE_URL 覆盖。
+      type: string
+      required: true
+      default: ''
+    - name: timeout-seconds
+      label:
+        en_US: Timeout (seconds)
+        zh_Hans: 超时（秒）
+      type: integer
+      required: false
+      default: 120
+    - name: identity-ticket-env
+      label:
+        en_US: Default ticket environment variable
+        zh_Hans: 默认票据环境变量名
+      description:
+        en_US: Temporary probe hook — env var NAME for a backend user ticket when no identity map is set. Not employee identity and not a shared production ticket. Never put the ticket value here.
+        zh_Hans: 临时探测钩子——未配置身份映射时读取的后端用户票据环境变量名。不是员工身份，也不是人人共用的生产票据。此处只填变量名，不要填票据值。
+      type: string
+      required: false
+      default: QUERY_BOT_PSR_USER_TICKET
+    - name: identity-map-file
+      label:
+        en_US: Identity map file
+        zh_Hans: 身份映射文件
+      description:
+        en_US: Optional JSON mapping trusted platform actor ids to ticket env var names. Official per-request employee identity is defined by the delivery identity contract, not by a single static ticket.
+        zh_Hans: 可选 JSON：将可信平台 actor id 映射到票据环境变量名。正式的按请求员工身份由交付侧身份合同定义，不是单一静态票据。
+      type: string
+      required: false
+      default: ''
+  capabilities:
+    streaming: false
+    tool_calling: false
+    knowledge_retrieval: false
+    multimodal_input: false
+    interrupt: false
+  permissions:
+    storage:
+      - plugin
+execution:
+  python:
+    path: default.py
+    attr: DefaultRunner
