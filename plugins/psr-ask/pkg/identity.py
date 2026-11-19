@@ -88,7 +88,9 @@ def resolve_ticket_env(
                 code="psr.identity_unmapped",
             )
     else:
-        # B0 shared restricted identity: one authorized test ticket for mapped bots.
+        # Fallback env-name hook only. Not B0 employee identity and not a
+        # shared "one ticket for everyone" production path — see delivery
+        # identity contract (per-request mapping). Temporary probe use only.
         ticket_env = default_env
 
     ticket = env.get(ticket_env)
